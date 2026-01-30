@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import userRoutes from "./component/user/index.js";
 import path from "path";
+import adminRoutes from "./component/admin/index.js";
 import config from "../config/index.js";
 
 const PORT = config.PORT;
@@ -39,6 +40,7 @@ const startServer = async () => {
     
 const router = express.Router();
 app.use("/api", userRoutes(router));
+app.use("/api", adminRoutes(router));
     
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);

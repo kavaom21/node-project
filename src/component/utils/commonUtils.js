@@ -2,9 +2,7 @@ import fs from "fs";
 import path from "path";
 import { authMiddleware, adminAuthMiddleware } from "../middelwares/index.js";
 
-/* ===========================
-   ROUTE ARRAY HANDLER
-=========================== */
+
 
 const routeArray = (routes, router) => {
   routes.forEach((route) => {
@@ -15,9 +13,11 @@ const routeArray = (routes, router) => {
     const isPublic = route.isPublic ?? false;
     const middleware = route.middleware;
 
+
+
     let middlewares = [];
 
-    // 🔐 AUTH HANDLING (USER vs ADMIN)
+
     if (!isPublic) {
       if (routePath.startsWith("/admin")) {
         middlewares.push(adminAuthMiddleware());
@@ -26,22 +26,22 @@ const routeArray = (routes, router) => {
       }
     }
 
-    // ✅ Validation middleware
+  
     if (validation) {
       Array.isArray(validation)
         ? middlewares.push(...validation)
         : middlewares.push(validation);
     }
 
-    // ✅ Custom middleware (multer, etc.)
+
     if (middleware) {
       middlewares.push(...middleware);
     }
 
-    // 🎯 Controller
+
     middlewares.push(controller);
 
-    // 🚀 Register route
+
     router[method](routePath, ...middlewares);
   });
 
@@ -52,9 +52,6 @@ export default {
   routeArray
 };
 
-/* ===========================
-   RESPONSE HELPERS
-=========================== */
 
 export const sendSuccess = (req, res, data = {}, statusCode = 200) => {
   return res.status(statusCode).json({
@@ -78,9 +75,6 @@ export const formattedErrors = (errors) => {
   return result;
 };
 
-/* ===========================
-   FILE / UPLOAD UTILITIES
-=========================== */
 
 export const ensureUploadDir = (folderName) => {
   const uploadPath = path.join("uploads", folderName);
@@ -114,9 +108,6 @@ export const cleanUploadedFiles = (files) => {
   });
 };
 
-/* ===========================
-   BASE64 IMAGE UTILITIES
-=========================== */
 
 export const saveBase64Image = (base64String, folderName) => {
   if (!base64String) return null;

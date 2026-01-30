@@ -5,21 +5,25 @@ import { validationMiddleware } from "./validation.js";
 
 export const adminAuthMiddleware = () => {
   return (req, res, next) => {
+
     try {
       const authHeader = req.headers.authorization;
+      
       if (!authHeader) {
-        return res.status(401).json({ success: 0, message: "No token" });
+        return res.status(401).json({  message: "No token" });
       }
 
       const token = authHeader.split(" ")[1];
       const decoded = jwt.verify(token, config.ACCESS_TOKEN_SECRET);
 
       if (decoded.role !== "admin") {
-        return res.status(403).json({ success: 0, message: "Admin access only" });
+        return res.status(403).json({  message: "Admin access only" });
       }
 
       req.headers.adminid = decoded.adminId;
       next();
+
+
     } catch (err) {
       return res.status(401).json({ success: 0, message: "Invalid token" });
     }
