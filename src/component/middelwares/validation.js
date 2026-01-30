@@ -25,9 +25,12 @@ export const validationMiddleware = (rules) => {
       return next();
     }
 
-    return sendError(req, res, {
-      errors: formattedErrors(validation.errors.errors)
-    }, 400);
+    const errors = formattedErrors(validation.errors.errors);
+    return res.status(400).json({
+      success: 0,
+      message: "Validation failed",
+      errors
+    });
   };
 };
 

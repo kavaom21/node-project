@@ -1,4 +1,5 @@
 
+
 import * as userController from "./controller/index.js";
 import { registerValidation, loginValidation, addressValidation } from "../middelwares/validation.js";
 import upload from "../middelwares/upload.middleware.js";
@@ -33,6 +34,8 @@ export default [
     controller: userController.logout,
     isPublic: false
   },
+
+
 {
   path: "/address",
   method: "post",
@@ -68,3 +71,4 @@ export default [
     ]
   }
 ];
+

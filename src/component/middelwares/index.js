@@ -25,8 +25,9 @@ export const authMiddleware = () => {
         });
       }
 
+      let decoded;
       try {
-        jwt.verify(token, config.ACCESS_TOKEN_SECRET);
+        decoded = jwt.verify(token, config.ACCESS_TOKEN_SECRET);
       } catch (err) {
         return res.status(401).json({
           success: 0,
@@ -34,29 +35,19 @@ export const authMiddleware = () => {
         });
       }
 
-      const decoded = jwt.decode(token);
-
-      if (!decoded) {
+      if (!decoded || !decoded.userId) {
         return res.status(401).json({
           success: 0,
           message: "Token decode failed"
         });
       }
 
-      const currentTime = Math.floor(Date.now() / 1000);
-
-      if (decoded.exp < currentTime) {
-        return res.status(401).json({
-          success: 0,
-          message: "Token expired"
-        });
-      }
-
       req.headers.userid = decoded.userId;
       next();
+
     } catch (error) {
       console.error("Auth error:", error.message);
-      res.status(401).json({
+      return res.status(401).json({
         success: 0,
         message: "Invalid or expired token"
       });
